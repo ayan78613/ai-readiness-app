@@ -11,8 +11,8 @@ connection needed after install.
 ## Install
 
 ```bash
-git clone <this-repo-url>
-cd kestra-ai-readiness-app
+git clone https://github.com/ayan78613/ai-readiness-app.git
+cd ai-readiness-app
 npm install
 npm run install:all
 ```
