@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Local SQLite database (each machine seeds its own on first run)
+server/ai_readiness.db
+server/ai_readiness.db-wal
+server/ai_readiness.db-shm
+
+# Env / secrets
+.env
+.env.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
