@@ -28,7 +28,9 @@ export const FUNCTIONS = [
   'Product Owner',
   'Support',
   'Data Governance',
-  'BI Developers'
+  'BI Developers',
+  'Business Analyst',
+  'Data Analyst'
 ];
 
 // Core 20 questions, grouped by dimension.
@@ -112,6 +114,14 @@ export const ROLE_MODULES = {
   'BI Developers': { moduleKey: 'F', questions: [
     { id: 'q31', text: 'I have used, or would be comfortable using, AI to assist with writing queries, building dashboards, or explaining trends in existing reports.', options: AGREE_SCALE },
     { id: 'q32', text: 'I validate AI-generated insights or visualizations against the underlying data before presenting them to stakeholders, rather than trusting the output at face value.', options: AGREE_SCALE }
+  ]},
+  'Business Analyst': { moduleKey: 'G', questions: [
+    { id: 'q33', text: 'I have used, or would be comfortable using, AI to assist with requirements gathering, process mapping, or translating business needs into specifications.', options: AGREE_SCALE },
+    { id: 'q34', text: 'I critically assess AI-generated business analysis — process recommendations, gap analyses, impact assessments — against stakeholder input and business context before presenting it as final.', options: AGREE_SCALE }
+  ]},
+  'Data Analyst': { moduleKey: 'H', questions: [
+    { id: 'q35', text: 'I have used, or would be comfortable using, AI to assist with data cleaning, exploratory analysis, or generating statistical summaries.', options: AGREE_SCALE },
+    { id: 'q36', text: 'I verify AI-generated analysis or statistical conclusions against the raw data before including them in a report or decision, rather than accepting them at face value.', options: AGREE_SCALE }
   ]}
 };
 

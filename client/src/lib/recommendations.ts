@@ -63,7 +63,9 @@ const FUNCTION_TIPS: Record<string, string> = {
   'Product Owner': 'Use AI to support estimation or risk identification on your next planning cycle, while keeping final judgment with you.',
   Support: 'Use AI to draft — never send — responses to routine, non-account-specific tickets, with mandatory human review before anything goes out.',
   'Data Governance': 'Pick one active AI use case and walk it through your existing governance checklist — data classification, lineage, documentation — to spot gaps before they become findings.',
-  'BI Developers': 'Use AI to draft your next query or dashboard, then verify the output against the source data before it ships to stakeholders — treat it as a first draft, not a final answer.'
+  'BI Developers': 'Use AI to draft your next query or dashboard, then verify the output against the source data before it ships to stakeholders — treat it as a first draft, not a final answer.',
+  'Business Analyst': 'Use AI to draft your next set of requirements or a process map, then walk it past a stakeholder before treating it as final — it speeds up the first draft, not the judgment call.',
+  'Data Analyst': 'Use AI for your next exploratory pass or statistical summary, then trace the key conclusions back to the raw data before they go into a report or decision.'
 };
 
 export function getIndividualRecommendations(assessment: Assessment, dimensions: Dimension[]): Recommendation[] {
