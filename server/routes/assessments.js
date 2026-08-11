@@ -95,6 +95,16 @@ router.get('/', (req, res) => {
   res.json(rows.map(serialize));
 });
 
+// Deliberate admin reset, not the normal append-only submission flow — wipes
+// every captured assessment record. Requires an explicit confirmation on the
+// client before this is ever called.
+router.delete('/', (req, res) => {
+  const { count: before } = db.prepare('SELECT COUNT(*) AS count FROM assessments').get();
+  db.exec('DELETE FROM assessments');
+  db.exec("DELETE FROM sqlite_sequence WHERE name = 'assessments'");
+  res.json({ deleted: before });
+});
+
 router.get('/:id', (req, res) => {
   const row = db.prepare('SELECT * FROM assessments WHERE id = ?').get(req.params.id);
   if (!row) return res.status(404).json({ error: 'Not found' });

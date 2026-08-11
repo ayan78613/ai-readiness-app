@@ -25,6 +25,7 @@ import { GovernanceTrendAreaChart, type GovernanceTrendRow } from '../components
 import { BAND_COLORS } from '../lib/colors';
 import { RecommendationList } from '../components/RecommendationList';
 import { getOrgRecommendations } from '../lib/recommendations';
+import { ConfirmModal } from '../components/ConfirmModal';
 import {
   Activity,
   BarChart3,
@@ -43,6 +44,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Sparkles,
+  Trash2,
   TrendingUp,
   Users,
   Waypoints
@@ -62,18 +64,29 @@ export function AdminDashboard() {
   const [meta, setMeta] = useState<MetaResponse | null>(null);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [allRoundsAssessments, setAllRoundsAssessments] = useState<Assessment[]>([]);
+  const [totalAssessmentCount, setTotalAssessmentCount] = useState(0);
   const [kpiData, setKpiData] = useState<KpisResponse | null>(null);
 
   const [roundLabel, setRoundLabel] = useState('');
   const [fn, setFn] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [refreshTick, setRefreshTick] = useState(0);
+
+  const [clearModalOpen, setClearModalOpen] = useState(false);
+  const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
     api.getQuestions().then(setQuestions);
     api.getMeta().then(setMeta);
     refreshKpis();
   }, []);
+
+  // Unfiltered, so it always reflects the true total — the modal message
+  // and "Clear Data" action operate on ALL assessments, not the current filter.
+  useEffect(() => {
+    api.getAssessments({}).then((rows) => setTotalAssessmentCount(rows.length));
+  }, [refreshTick]);
 
   useEffect(() => {
     api.getAssessments({
@@ -82,7 +95,7 @@ export function AdminDashboard() {
       date_from: dateFrom || undefined,
       date_to: dateTo || undefined
     }).then(setAssessments);
-  }, [roundLabel, fn, dateFrom, dateTo]);
+  }, [roundLabel, fn, dateFrom, dateTo, refreshTick]);
 
   // Cross-round charts (radar round-over-round, band migration, cumulative
   // participation, band-flow Sankey) are inherently about comparing rounds,
@@ -94,11 +107,23 @@ export function AdminDashboard() {
       date_from: dateFrom || undefined,
       date_to: dateTo || undefined
     }).then(setAllRoundsAssessments);
-  }, [fn, dateFrom, dateTo]);
+  }, [fn, dateFrom, dateTo, refreshTick]);
 
   function refreshKpis() {
     api.getKpis().then(setKpiData);
     api.getMeta().then(setMeta);
+  }
+
+  async function handleClearAssessments() {
+    setClearing(true);
+    try {
+      await api.clearAssessments();
+      setClearModalOpen(false);
+      setRefreshTick((t) => t + 1);
+      api.getMeta().then(setMeta);
+    } finally {
+      setClearing(false);
+    }
   }
 
   const roundLabels = useMemo(() => Array.from(new Set(assessments.map((a) => a.round_label))), [assessments]);
@@ -385,6 +410,15 @@ export function AdminDashboard() {
           </div>
           <span className="zone-description">Individual-submission data — filterable by round, function, and date range.</span>
         </div>
+        {totalAssessmentCount > 0 && (
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+            <a className="btn btn-secondary" href={api.exportUrl('assessments', 'csv')}><Download size={14} /> Export CSV</a>
+            <a className="btn btn-secondary" href={api.exportUrl('assessments', 'json')}><Download size={14} /> Export JSON</a>
+            <button className="btn btn-danger" onClick={() => setClearModalOpen(true)}>
+              <Trash2 size={14} /> Clear Data
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="filter-bar">
@@ -586,10 +620,8 @@ export function AdminDashboard() {
           <span className="zone-description">The 27-KPI management framework across 6 categories — append-only history.</span>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <a className="btn btn-secondary" href={api.exportUrl('assessments', 'csv')}><Download size={14} /> Assessments CSV</a>
-          <a className="btn btn-secondary" href={api.exportUrl('assessments', 'json')}><Download size={14} /> Assessments JSON</a>
-          <a className="btn btn-secondary" href={api.exportUrl('kpi_records', 'csv')}><Download size={14} /> KPIs CSV</a>
-          <a className="btn btn-secondary" href={api.exportUrl('kpi_records', 'json')}><Download size={14} /> KPIs JSON</a>
+          <a className="btn btn-secondary" href={api.exportUrl('kpi_records', 'csv')}><Download size={14} /> Export CSV</a>
+          <a className="btn btn-secondary" href={api.exportUrl('kpi_records', 'json')}><Download size={14} /> Export JSON</a>
         </div>
       </div>
 
@@ -671,6 +703,16 @@ export function AdminDashboard() {
           })}
         </>
       )}
+
+      <ConfirmModal
+        open={clearModalOpen}
+        title="Clear all assessment data?"
+        message={`This permanently deletes all ${totalAssessmentCount} captured assessment submission(s) from this local database — including any outside your current filters. Export a copy first if you want to keep them; this cannot be undone. The KPI framework in Zone B is not affected.`}
+        confirmLabel="Delete permanently"
+        busy={clearing}
+        onConfirm={handleClearAssessments}
+        onCancel={() => setClearModalOpen(false)}
+      />
     </div>
   );
 }

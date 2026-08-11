@@ -31,6 +31,8 @@ export const api = {
     return req<Assessment[]>(`/assessments${suffix}`);
   },
 
+  clearAssessments: () => req<{ deleted: number }>('/assessments', { method: 'DELETE' }),
+
   getKpis: () => req<KpisResponse>('/kpis'),
 
   updateKpi: (kpiKey: string, payload: { current_value?: string; status?: string; owner?: string; baseline_value?: string }) =>
