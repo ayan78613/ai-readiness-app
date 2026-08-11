@@ -26,7 +26,9 @@ export const FUNCTIONS = [
   'QA Engineering',
   'PMO',
   'Product Owner',
-  'Support'
+  'Support',
+  'Data Governance',
+  'BI Developers'
 ];
 
 // Core 20 questions, grouped by dimension.
@@ -102,6 +104,14 @@ export const ROLE_MODULES = {
   'Support': { moduleKey: 'D', questions: [
     { id: 'q27', text: 'I have used, or would be comfortable using, AI to help triage, summarize, or draft responses to support tickets or client inquiries.', options: AGREE_SCALE },
     { id: 'q28', text: 'I know the boundaries of what AI-drafted, client-facing support responses need human review before being sent — especially anything touching account or transaction details.', options: AGREE_SCALE }
+  ]},
+  'Data Governance': { moduleKey: 'E', questions: [
+    { id: 'q29', text: 'I have used, or would be comfortable using, AI to assist with data cataloging, metadata management, or classifying data sensitivity (e.g., PII, NPI) across our systems.', options: AGREE_SCALE },
+    { id: 'q30', text: 'I factor AI-specific governance requirements — such as model documentation, data lineage for AI training/inputs, and audit trails for AI-assisted decisions — into the data governance policies I help define or enforce.', options: AGREE_SCALE }
+  ]},
+  'BI Developers': { moduleKey: 'F', questions: [
+    { id: 'q31', text: 'I have used, or would be comfortable using, AI to assist with writing queries, building dashboards, or explaining trends in existing reports.', options: AGREE_SCALE },
+    { id: 'q32', text: 'I validate AI-generated insights or visualizations against the underlying data before presenting them to stakeholders, rather than trusting the output at face value.', options: AGREE_SCALE }
   ]}
 };
 

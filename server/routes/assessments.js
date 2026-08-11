@@ -6,7 +6,7 @@ import { FUNCTIONS, ROLE_MODULES, CORE_QUESTIONS, allQuestionIds } from '../ques
 const router = Router();
 
 const VALID_SCORES = new Set([0, 25, 50, 75, 100]);
-const ALL_QUESTION_IDS = Array.from({ length: 28 }, (_, i) => `q${i + 1}`);
+const ALL_QUESTION_IDS = Array.from({ length: 32 }, (_, i) => `q${i + 1}`);
 
 function validateSubmission(body) {
   const errors = [];

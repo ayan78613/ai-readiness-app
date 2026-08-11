@@ -61,7 +61,9 @@ const FUNCTION_TIPS: Record<string, string> = {
   'QA Engineering': 'Start generating test cases or synthetic test data with AI for one non-critical suite, with human review of the results before it counts toward regression coverage.',
   PMO: 'Draft your next status report, RAID log, or set of requirements with AI assistance, then edit — track the time it saves you.',
   'Product Owner': 'Use AI to support estimation or risk identification on your next planning cycle, while keeping final judgment with you.',
-  Support: 'Use AI to draft — never send — responses to routine, non-account-specific tickets, with mandatory human review before anything goes out.'
+  Support: 'Use AI to draft — never send — responses to routine, non-account-specific tickets, with mandatory human review before anything goes out.',
+  'Data Governance': 'Pick one active AI use case and walk it through your existing governance checklist — data classification, lineage, documentation — to spot gaps before they become findings.',
+  'BI Developers': 'Use AI to draft your next query or dashboard, then verify the output against the source data before it ships to stakeholders — treat it as a first draft, not a final answer.'
 };
 
 export function getIndividualRecommendations(assessment: Assessment, dimensions: Dimension[]): Recommendation[] {
