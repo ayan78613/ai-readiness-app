@@ -6,7 +6,11 @@ connection needed after install.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 20 or newer (built and tested on Node 22)
+- [Node.js](https://nodejs.org/) 22.13 or newer (built and tested on Node 22 and 26)
+
+No native/C++ build tools needed — the database uses Node's built-in
+`node:sqlite`, not a compiled addon, so `npm install` is pure JS on any
+platform.
 
 ## Install
 
@@ -38,6 +42,6 @@ runs (that file is git-ignored, so each machine keeps its own).
 ## Project structure
 
 ```
-/server   Express API + SQLite (better-sqlite3)
+/server   Express API + SQLite (built-in node:sqlite)
 /client   React + Vite + TypeScript, charts via Recharts
 ```

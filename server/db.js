@@ -1,13 +1,18 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { KPI_SEED } from './kpiSeed.js';
 
+// Node's built-in SQLite module (stable/RC on modern Node, ships inside Node
+// itself) instead of better-sqlite3 — a native addon whose prebuilt binaries
+// lag behind new Node majors and whose from-source build breaks whenever V8's
+// API shifts. This has the same synchronous .prepare().run/get/all() surface,
+// so no route code needed to change.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, 'ai_readiness.db');
 
-export const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
+export const db = new DatabaseSync(DB_PATH);
+db.exec('PRAGMA journal_mode = WAL');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS assessments (
@@ -57,9 +62,13 @@ if (kpiCount === 0) {
       (@kpi_key, @category, @kpi_name, @definition, @data_source, '', @target_value, '', 'Not started', '', @recorded_at)
   `);
   const now = new Date().toISOString();
-  const seedAll = db.transaction((rows) => {
-    for (const row of rows) insert.run({ ...row, recorded_at: now });
-  });
-  seedAll(KPI_SEED);
+  db.exec('BEGIN');
+  try {
+    for (const row of KPI_SEED) insert.run({ ...row, recorded_at: now });
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw err;
+  }
   console.log(`Seeded ${KPI_SEED.length} KPI rows into kpi_records.`);
 }
