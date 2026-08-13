@@ -4,6 +4,7 @@ import { NewAssessment } from './pages/NewAssessment';
 import { Results } from './pages/Results';
 import { MyHistory } from './pages/MyHistory';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { BenchmarkReport } from './pages/BenchmarkReport';
 
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
         <Route path="/results/:id" element={<Results />} />
         <Route path="/history" element={<MyHistory />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/benchmark" element={<BenchmarkReport />} />
       </Routes>
     </div>
   );

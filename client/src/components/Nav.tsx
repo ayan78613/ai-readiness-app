@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { ClipboardList, History, LayoutDashboard, Moon, Sun } from 'lucide-react';
+import { ClipboardList, History, LayoutDashboard, Moon, Scale, Sun } from 'lucide-react';
 import { getStoredTheme, setTheme, type Theme } from '../lib/theme';
 import { KestraLogo } from './KestraLogo';
 
@@ -32,6 +32,9 @@ export function Nav() {
         </NavLink>
         <NavLink to="/admin" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
           <LayoutDashboard size={15} /> Admin Dashboard
+        </NavLink>
+        <NavLink to="/benchmark" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+          <Scale size={15} /> Benchmark Report
         </NavLink>
       </div>
 
