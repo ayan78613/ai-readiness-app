@@ -76,11 +76,30 @@ export const COMPARISON_TEMPLATES: Record<string, Comparison> = {
 };
 
 // 1-10 finance AI maturity distribution, for the positioning gauge.
+// min/max are the score-10 boundaries each published bucket covers.
 export const MATURITY_TIERS = [
-  { label: 'Low (1–3)', share: 17, color: '#8A6B62' },
-  { label: 'Mid (4–6)', share: 50, color: 'var(--blue-dark)' },
-  { label: 'High (7–10)', share: 33, color: 'var(--gold)' }
+  { label: 'Low (1–3)', share: 17, color: '#8A6B62', min: 0, max: 3 },
+  { label: 'Mid (4–6)', share: 50, color: 'var(--blue-dark)', min: 3, max: 6 },
+  { label: 'High (7–10)', share: 33, color: 'var(--gold)', min: 6, max: 10 }
 ];
+
+// Estimated percentile: linear interpolation of a 1-10 score across the
+// cumulative share of orgs in each published tier (source 2). This is a
+// directional estimate from bucketed survey data, not a measured rank —
+// callers should label it "estimated."
+export function estimatePercentile(score10: number, tiers: typeof MATURITY_TIERS = MATURITY_TIERS): number {
+  const clamped = Math.max(0, Math.min(10, score10));
+  let cumulative = 0;
+  for (const tier of tiers) {
+    if (clamped <= tier.max) {
+      const span = tier.max - tier.min || 1;
+      const withinTier = (clamped - tier.min) / span;
+      return Math.round(cumulative + withinTier * tier.share);
+    }
+    cumulative += tier.share;
+  }
+  return Math.round(cumulative);
+}
 
 export const LPL_FACTS = {
   scaleCaveat: 'LPL Financial serves 30,000+ affiliated advisors; this program’s Baseline round has a small number of respondents at one firm. What follows is directional context from a named industry peer’s public disclosures, not a statistical peer comparison.',

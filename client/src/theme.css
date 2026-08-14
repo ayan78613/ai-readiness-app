@@ -891,6 +891,34 @@ table.data-table tr:hover td { background: var(--surface-alt); }
   color: var(--gold-dark);
 }
 
+.recommendation-ref {
+  color: var(--gold-dark);
+  font-weight: 700;
+  margin-left: 2px;
+  cursor: default;
+}
+
+.recommendation-sources {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.recommendation-sources .n {
+  color: var(--gold-dark);
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.recommendation-sources a {
+  color: var(--blue-dark);
+}
+
 /* ---------- Recharts theme adaptation ---------- */
 /* Recharts' default text/grid colors are hardcoded greys, so we retint them
    globally via CSS instead of touching every chart's tick/grid props. */

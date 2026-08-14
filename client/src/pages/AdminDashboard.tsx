@@ -368,6 +368,19 @@ export function AdminDashboard() {
     });
   }, [kpiData]);
 
+  const leadingPct = useMemo(() => {
+    if (assessments.length === 0) return undefined;
+    return Math.round(((bandCounts['Leading'] ?? 0) / assessments.length) * 100);
+  }, [bandCounts, assessments]);
+
+  const govPct = useMemo(() => {
+    if (!kpiData) return undefined;
+    const govKpis = kpiData.kpis.filter((k) => k.category === GOVERNANCE_CATEGORY);
+    if (govKpis.length === 0) return undefined;
+    const govActive = govKpis.filter((k) => k.status === 'On track' || k.status === 'Complete').length;
+    return Math.round((govActive / govKpis.length) * 100);
+  }, [kpiData]);
+
   const orgRecommendations = useMemo(() => {
     return getOrgRecommendations({
       dimAverages,
@@ -375,9 +388,11 @@ export function AdminDashboard() {
       quadrant: usageGovernanceQuadrant,
       riskPareto: kpiRiskPareto,
       bandCounts,
-      totalN: assessments.length
+      totalN: assessments.length,
+      leadingPct,
+      govPct
     });
-  }, [dimAverages, byFunction, usageGovernanceQuadrant, kpiRiskPareto, bandCounts, assessments]);
+  }, [dimAverages, byFunction, usageGovernanceQuadrant, kpiRiskPareto, bandCounts, assessments, leadingPct, govPct]);
 
   const dataAsOf = meta?.data_as_of ? new Date(meta.data_as_of).toLocaleString() : '—';
 

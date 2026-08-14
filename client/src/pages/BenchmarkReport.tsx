@@ -10,7 +10,7 @@ import { StatTile } from '../components/StatTile';
 import { BandBadge } from '../components/Badges';
 import { BenchmarkCompareBar } from '../components/BenchmarkCompareBar';
 import { ChartCard } from '../components/ChartCard';
-import { COMPARISON_TEMPLATES, LPL_FACTS, MATURITY_TIERS, SOURCES } from '../lib/externalBenchmarks';
+import { COMPARISON_TEMPLATES, estimatePercentile, LPL_FACTS, MATURITY_TIERS, SOURCES } from '../lib/externalBenchmarks';
 import { Scale, BarChart3, Building2, ShieldCheck, Compass, Landmark } from 'lucide-react';
 
 export function BenchmarkReport() {
@@ -90,6 +90,7 @@ export function BenchmarkReport() {
   };
 
   const positionScore10 = (stats.compositeAvg / 100) * 10;
+  const percentile = estimatePercentile(positionScore10);
 
   return (
     <div className="page">
@@ -120,10 +121,10 @@ export function BenchmarkReport() {
           </div>
         </div>
         <div className="grid grid-2">
+          <div className="card"><StatTile label="Est. global percentile" value={`~${percentile}th`} sub="Cross-industry AI maturity study" /></div>
           <div className="card"><StatTile label="Band mix" value={`${stats.leadingPct}%`} sub={`Leading, ${stats.n} submissions`} /></div>
           <div className="card"><StatTile label="Weakest dimension" value={stats.weakest.value.toFixed(1)} sub={stats.weakest.label} /></div>
           <div className="card"><StatTile label="Governance KPIs active" value={`${stats.govKpis.filter((k) => k.status === 'On track' || k.status === 'Complete').length}/${stats.govKpis.length}`} sub="Formally tracked" /></div>
-          <div className="card"><StatTile label="KPI program overall" value={`${stats.activeKpis}/${stats.totalKpis}`} sub="On track or Complete" /></div>
         </div>
       </div>
 
@@ -230,7 +231,9 @@ export function BenchmarkReport() {
         <p style={{ margin: '0 0 4px', fontSize: 13.5 }}>
           A cross-industry finance-function study scores organizations 1–10 on AI maturity: ~17% score low (1–3), ~50% mid (4–6),
           ~33% high (7–10).<sup>2</sup> Kestra's composite ({stats.compositeAvg.toFixed(1)}/100) maps to{' '}
-          <b className="tnum" style={{ color: 'var(--heading-color)' }}>≈{positionScore10.toFixed(1)}/10</b>.
+          <b className="tnum" style={{ color: 'var(--heading-color)' }}>≈{positionScore10.toFixed(1)}/10</b> — interpolating within that
+          published distribution, that's an estimated{' '}
+          <b className="tnum" style={{ color: 'var(--heading-color)' }}>~{percentile}th percentile</b>.
         </p>
         <div className="pos-wrap">
           <div className="pos-flag" style={{ left: `${positionScore10 * 10}%` }}>
